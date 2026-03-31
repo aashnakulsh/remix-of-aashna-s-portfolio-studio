@@ -24,25 +24,25 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
       variants={fadeInUp}
-      className="group flex flex-col h-full bg-card rounded-lg border border-border shadow-card hover:shadow-elevated transition-all duration-300"
+      className="group flex flex-col h-full bg-card rounded-lg border border-border shadow-card hover:shadow-elevated hover:-translate-y-[2px] transition-all duration-300 ease-out"
     >
       {/* Image */}
-      <div className="aspect-[4/3] rounded-t-lg overflow-hidden bg-muted">
+      <div className="aspect-[16/9] rounded-t-lg overflow-hidden bg-muted">
         {project.image ? (
           <img
             src={project.image}
             alt={project.title}
-            className="w-full h-full object-cover group-hover:scale-[1.03] group-hover:brightness-105 transition-all duration-500"
+            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 ease-out"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-secondary to-muted flex items-center justify-center text-muted-foreground/40 font-body text-sm group-hover:scale-[1.03] transition-transform duration-500">
+          <div className="w-full h-full bg-gradient-to-br from-secondary to-muted flex items-center justify-center text-muted-foreground/40 font-body text-sm group-hover:scale-[1.02] transition-transform duration-500 ease-out">
             {project.category}
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 p-5 gap-3">
+      <div className="flex flex-col flex-1 px-4 py-3.5 gap-2">
         {/* Category */}
         <span className="text-xs font-body tracking-widest uppercase text-primary">
           {project.category}
@@ -70,7 +70,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
 
         {/* Link buttons */}
         {project.links && project.links.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-auto pt-2">
+          <div className="flex flex-wrap gap-1.5 mt-auto pt-1">
             {project.links.map((link) => (
               <a
                 key={link.label}
@@ -78,7 +78,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1.5 text-xs font-body font-medium px-3 py-1.5 rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors duration-200"
+                className="inline-flex items-center gap-1 text-xs font-body font-medium px-2.5 py-1 rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors duration-200"
               >
                 <ExternalLink className="h-3 w-3" />
                 {link.label}
