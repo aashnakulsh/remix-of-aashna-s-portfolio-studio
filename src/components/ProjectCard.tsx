@@ -42,7 +42,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       </div>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 p-5 gap-3">
+      <div className="flex flex-col flex-1 px-4 py-3.5 gap-2">
         {/* Category */}
         <span className="text-xs font-body tracking-widest uppercase text-primary">
           {project.category}
