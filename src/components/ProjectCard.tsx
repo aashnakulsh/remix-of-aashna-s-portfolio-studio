@@ -24,7 +24,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
       variants={fadeInUp}
-      className="group flex flex-col h-full bg-card rounded-lg border border-border shadow-card hover:shadow-elevated transition-all duration-300"
+      className="group flex flex-col h-full bg-card rounded-lg border border-border shadow-card hover:shadow-elevated hover:-translate-y-[2px] transition-all duration-300 ease-out"
     >
       {/* Image */}
       <div className="aspect-[4/3] rounded-t-lg overflow-hidden bg-muted">
