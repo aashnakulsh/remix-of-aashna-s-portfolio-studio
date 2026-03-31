@@ -27,15 +27,15 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       className="group flex flex-col h-full bg-card rounded-lg border border-border shadow-card hover:shadow-elevated hover:-translate-y-[2px] transition-all duration-300 ease-out"
     >
       {/* Image */}
-      <div className="aspect-[4/3] rounded-t-lg overflow-hidden bg-muted">
+      <div className="aspect-[16/9] rounded-t-lg overflow-hidden bg-muted">
         {project.image ? (
           <img
             src={project.image}
             alt={project.title}
-            className="w-full h-full object-cover group-hover:scale-[1.03] group-hover:brightness-105 transition-all duration-500"
+            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 ease-out"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-secondary to-muted flex items-center justify-center text-muted-foreground/40 font-body text-sm group-hover:scale-[1.03] transition-transform duration-500">
+          <div className="w-full h-full bg-gradient-to-br from-secondary to-muted flex items-center justify-center text-muted-foreground/40 font-body text-sm group-hover:scale-[1.02] transition-transform duration-500 ease-out">
             {project.category}
           </div>
         )}
