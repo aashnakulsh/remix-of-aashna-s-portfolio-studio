@@ -26,7 +26,7 @@ const ProjectsPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-28 pb-20">
-        <div className="max-w-6xl mx-auto section-padding">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
           {/* Header */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
