@@ -70,7 +70,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
 
         {/* Link buttons */}
         {project.links && project.links.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-auto pt-2">
+          <div className="flex flex-wrap gap-1.5 mt-auto pt-1">
             {project.links.map((link) => (
               <a
                 key={link.label}
