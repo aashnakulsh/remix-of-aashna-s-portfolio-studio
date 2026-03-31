@@ -17,6 +17,9 @@ const fadeInUp = {
 };
 
 const ProjectCard = ({ project, index }: ProjectCardProps) => {
+  // Show max 4 tools only
+  const displayTools = project.tools.slice(0, 4);
+
   return (
     <motion.div
       custom={index}
@@ -24,7 +27,8 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
       variants={fadeInUp}
-      className="group flex flex-col h-full bg-card rounded-lg border border-border shadow-card hover:shadow-elevated hover:-translate-y-[2px] transition-all duration-300 ease-out"
+      whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
+      className="group flex flex-col h-full bg-card rounded-lg border border-border shadow-card hover:shadow-elevated transition-shadow duration-300 ease-out"
     >
       {/* Image */}
       <div className="aspect-[16/9] rounded-t-lg overflow-hidden bg-muted">
@@ -32,39 +36,39 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           <img
             src={project.image}
             alt={project.title}
-            className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500 ease-out"
+            className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-500 ease-out"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-secondary to-muted flex items-center justify-center text-muted-foreground/40 font-body text-sm group-hover:scale-[1.02] transition-transform duration-500 ease-out">
+          <div className="w-full h-full bg-gradient-to-br from-secondary to-muted flex items-center justify-center text-muted-foreground/40 font-body text-sm group-hover:scale-[1.04] transition-transform duration-500 ease-out">
             {project.category}
           </div>
         )}
       </div>
 
       {/* Content */}
-      <div className="flex flex-col flex-1 px-4 py-3.5 gap-2">
+      <div className="flex flex-col flex-1 px-4 py-3.5 gap-1.5">
         {/* Category */}
         <span className="text-xs font-body tracking-widest uppercase text-primary">
           {project.category}
         </span>
 
         {/* Title */}
-        <h3 className="font-display text-lg text-foreground group-hover:text-primary transition-colors duration-200 -mt-1">
+        <h3 className="font-display text-lg text-foreground group-hover:text-primary transition-colors duration-200">
           {project.title}
         </h3>
 
-        {/* Description */}
-        <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-3">
+        {/* Description — 2 lines max */}
+        <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-2">
           {project.description}
         </p>
 
-        {/* Tools / Skills (inline text) */}
-        <p className="text-xs font-body text-foreground/70 leading-relaxed">
-          {[...project.tools, ...project.skills].join(" · ")}
+        {/* Tools (max 4, inline text) */}
+        <p className="text-xs font-body text-foreground/70">
+          {displayTools.join(" · ")}
         </p>
 
-        {/* Impact */}
-        <p className="text-xs font-body text-muted-foreground italic leading-relaxed">
+        {/* Impact — single line */}
+        <p className="text-xs font-body text-muted-foreground italic line-clamp-1">
           {project.impact}
         </p>
 
