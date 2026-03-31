@@ -1,3 +1,8 @@
+export interface ProjectLink {
+  label: string;
+  url: string;
+}
+
 export interface Project {
   title: string;
   category: string;
@@ -6,7 +11,8 @@ export interface Project {
   tools: string[];
   impact: string;
   featured?: boolean;
-  link?: string;
+  image?: string;
+  links?: ProjectLink[];
 }
 
 export const projects: Project[] = [
@@ -20,6 +26,10 @@ export const projects: Project[] = [
     impact:
       "Published findings on how landmark density affects navigation accuracy, contributing to ongoing HCI research at the lab.",
     featured: true,
+    links: [
+      { label: "Demo", url: "#" },
+      { label: "Writeup", url: "#" },
+    ],
   },
   {
     title: "Distributed Task Scheduler",
@@ -31,6 +41,9 @@ export const projects: Project[] = [
     impact:
       "Reduced average job completion latency by 40% compared to the team's previous single-node approach.",
     featured: true,
+    links: [
+      { label: "GitHub", url: "#" },
+    ],
   },
   {
     title: "Procedural Dungeon Crawler",
@@ -42,6 +55,10 @@ export const projects: Project[] = [
     impact:
       "Showcased at a university game expo; received recognition for level design and replayability.",
     featured: true,
+    links: [
+      { label: "Demo", url: "#" },
+      { label: "GitHub", url: "#" },
+    ],
   },
   {
     title: "Campus Accessibility Audit Platform",
@@ -53,6 +70,11 @@ export const projects: Project[] = [
     impact:
       "Adopted by the university's disability services office for ongoing infrastructure reviews.",
     featured: true,
+    links: [
+      { label: "Demo", url: "#" },
+      { label: "GitHub", url: "#" },
+      { label: "Writeup", url: "#" },
+    ],
   },
   {
     title: "Student Org Operations Toolkit",
@@ -63,6 +85,9 @@ export const projects: Project[] = [
     tools: ["React", "Firebase", "Figma"],
     impact:
       "Cut administrative overhead by roughly 60%, freeing the leadership team to focus on programming.",
+    links: [
+      { label: "GitHub", url: "#" },
+    ],
   },
 ];
 

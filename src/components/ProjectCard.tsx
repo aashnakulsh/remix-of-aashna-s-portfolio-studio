@@ -5,7 +5,6 @@ import type { Project } from "@/data/projects";
 interface ProjectCardProps {
   project: Project;
   index: number;
-  detailed?: boolean;
 }
 
 const fadeInUp = {
@@ -17,12 +16,7 @@ const fadeInUp = {
   }),
 };
 
-const ProjectCard = ({ project, index, detailed = false }: ProjectCardProps) => {
-  const Wrapper = project.link ? "a" : "div";
-  const wrapperProps = project.link
-    ? { href: project.link, target: "_blank", rel: "noopener noreferrer" }
-    : {};
-
+const ProjectCard = ({ project, index }: ProjectCardProps) => {
   return (
     <motion.div
       custom={index}
@@ -30,48 +24,69 @@ const ProjectCard = ({ project, index, detailed = false }: ProjectCardProps) => 
       whileInView="visible"
       viewport={{ once: true, margin: "-40px" }}
       variants={fadeInUp}
+      className="group flex flex-col h-full bg-card rounded-lg border border-border shadow-card hover:shadow-elevated transition-all duration-300"
     >
-      <Wrapper
-        {...(wrapperProps as any)}
-        className="group flex flex-col h-full bg-card rounded-lg border border-border p-5 shadow-card hover:shadow-elevated transition-all duration-300 cursor-pointer"
-      >
-        {/* Category & link icon */}
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-body tracking-widest uppercase text-primary">
+      {/* Image */}
+      <div className="aspect-[4/3] rounded-t-lg overflow-hidden bg-muted">
+        {project.image ? (
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-cover group-hover:scale-[1.03] group-hover:brightness-105 transition-all duration-500"
+          />
+        ) : (
+          <div className="w-full h-full bg-gradient-to-br from-secondary to-muted flex items-center justify-center text-muted-foreground/40 font-body text-sm group-hover:scale-[1.03] transition-transform duration-500">
             {project.category}
-          </span>
-          <ExternalLink className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-200 shrink-0" />
-        </div>
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-5 gap-3">
+        {/* Category */}
+        <span className="text-xs font-body tracking-widest uppercase text-primary">
+          {project.category}
+        </span>
 
         {/* Title */}
-        <h3 className="font-display text-lg text-foreground group-hover:text-primary transition-colors duration-200 mb-2">
+        <h3 className="font-display text-lg text-foreground group-hover:text-primary transition-colors duration-200 -mt-1">
           {project.title}
         </h3>
 
         {/* Description */}
-        <p className={`font-body text-sm text-muted-foreground leading-relaxed mb-4 ${detailed ? "" : "line-clamp-2"}`}>
+        <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-3">
           {project.description}
         </p>
 
-        {/* Impact (detailed only) */}
-        {detailed && (
-          <p className="text-xs font-body text-muted-foreground italic mb-3">
-            {project.impact}
-          </p>
-        )}
+        {/* Tools / Skills (inline text) */}
+        <p className="text-xs font-body text-foreground/70 leading-relaxed">
+          {[...project.tools, ...project.skills].join(" · ")}
+        </p>
 
-        {/* Tags */}
-        <div className="mt-auto flex flex-wrap gap-1.5">
-          {project.tools.map((tool) => (
-            <span
-              key={tool}
-              className="text-xs font-body px-2 py-0.5 rounded-full bg-secondary text-secondary-foreground"
-            >
-              {tool}
-            </span>
-          ))}
-        </div>
-      </Wrapper>
+        {/* Impact */}
+        <p className="text-xs font-body text-muted-foreground italic leading-relaxed">
+          {project.impact}
+        </p>
+
+        {/* Link buttons */}
+        {project.links && project.links.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-auto pt-2">
+            {project.links.map((link) => (
+              <a
+                key={link.label}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1.5 text-xs font-body font-medium px-3 py-1.5 rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors duration-200"
+              >
+                <ExternalLink className="h-3 w-3" />
+                {link.label}
+              </a>
+            ))}
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 };
