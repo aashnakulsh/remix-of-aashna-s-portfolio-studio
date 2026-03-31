@@ -78,7 +78,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="inline-flex items-center gap-1.5 text-xs font-body font-medium px-3 py-1.5 rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors duration-200"
+                className="inline-flex items-center gap-1 text-xs font-body font-medium px-2.5 py-1 rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-primary/40 transition-colors duration-200"
               >
                 <ExternalLink className="h-3 w-3" />
                 {link.label}
