@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
-const navItems = [
+interface NavItem {
+  label: string;
+  href?: string;
+  to?: string;
+}
+
+const navItems: NavItem[] = [
   { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
+  { label: "Projects", to: "/projects" },
   { label: "Resume", href: "#resume" },
   { label: "Contact", href: "#contact" },
 ];
