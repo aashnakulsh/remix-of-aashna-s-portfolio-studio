@@ -105,7 +105,6 @@ const ProjectsPage = () => {
                 key={project.title}
                 project={project}
                 index={i}
-                detailed
               />
             ))}
           </div>
