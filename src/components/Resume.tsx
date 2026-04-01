@@ -6,60 +6,119 @@ interface TimelineEntry {
   role: string;
   org: string;
   period: string;
-  year: string;
+  startMonth: number; // 1-12
+  startYear: number;
+  endMonth: number | null; // null = present
+  endYear: number | null;
   side: "left" | "right";
 }
+
+const NOW_YEAR = 2025;
+const NOW_MONTH = 4;
 
 const timelineEntries: TimelineEntry[] = [
   {
     role: "Undergraduate Research Assistant",
     org: "HCI & Spatial Computing Lab",
-    period: "2024 — Present",
-    year: "2024",
+    period: "Jan 2024 — Present",
+    startMonth: 1,
+    startYear: 2024,
+    endMonth: null,
+    endYear: null,
     side: "left",
   },
   {
     role: "President",
     org: "Women in Computing",
-    period: "2024 — Present",
-    year: "2024",
+    period: "Aug 2024 — Present",
+    startMonth: 8,
+    startYear: 2024,
+    endMonth: null,
+    endYear: null,
     side: "right",
   },
   {
     role: "Software Engineering Intern",
     org: "Infrastructure Team — [Company]",
-    period: "Summer 2024",
-    year: "2024",
+    period: "Jun — Aug 2024",
+    startMonth: 6,
+    startYear: 2024,
+    endMonth: 8,
+    endYear: 2024,
     side: "left",
   },
   {
     role: "Teaching Assistant",
     org: "Intro to Computer Science",
-    period: "Spring 2024",
-    year: "2024",
+    period: "Jan — May 2024",
+    startMonth: 1,
+    startYear: 2024,
+    endMonth: 5,
+    endYear: 2024,
     side: "right",
   },
   {
     role: "Design Lead",
     org: "HackClub University Chapter",
-    period: "2023 — 2024",
-    year: "2023",
+    period: "Aug 2023 — May 2024",
+    startMonth: 8,
+    startYear: 2023,
+    endMonth: 5,
+    endYear: 2024,
     side: "left",
   },
   {
     role: "Volunteer Instructor",
     org: "Code for Good Initiative",
-    period: "2022 — 2023",
-    year: "2022",
+    period: "Sep 2022 — May 2023",
+    startMonth: 9,
+    startYear: 2022,
+    endMonth: 5,
+    endYear: 2023,
     side: "right",
   },
 ];
 
-const years = [...new Set(timelineEntries.map((e) => e.year))];
+// Convert year+month to a fractional year value for positioning
+function toFractional(year: number, month: number): number {
+  return year + (month - 1) / 12;
+}
+
+// Calculate layout constants
+const PIXELS_PER_YEAR = 160; // vertical pixels per year of duration
+const MIN_CARD_HEIGHT = 52; // minimum card height in px
+const CARD_WIDTH = 220; // fixed card width
 
 const Resume = () => {
+  // Determine the full time range
+  const allStarts = timelineEntries.map((e) => toFractional(e.startYear, e.startMonth));
+  const allEnds = timelineEntries.map((e) =>
+    e.endYear && e.endMonth
+      ? toFractional(e.endYear, e.endMonth)
+      : toFractional(NOW_YEAR, NOW_MONTH)
+  );
+  const timelineStart = Math.min(...allStarts);
+  const timelineEnd = Math.max(...allEnds);
+  const totalYears = timelineEnd - timelineStart;
+  const totalHeight = totalYears * PIXELS_PER_YEAR;
+
+  // Generate year tick marks
+  const firstFullYear = Math.ceil(timelineStart);
+  const lastFullYear = Math.floor(timelineEnd);
+  const yearTicks: number[] = [];
+  for (let y = firstFullYear; y <= lastFullYear; y++) {
+    yearTicks.push(y);
+  }
+
+  // Position helper: fractional year → px from top (timeline goes top=latest, bottom=earliest)
+  // Actually let's go top=earliest, bottom=latest (chronological top-down)
+  // Wait, conventional timelines often go newest on top. Let's do newest on top.
+  const toTop = (fractionalYear: number) => {
+    return (timelineEnd - fractionalYear) * PIXELS_PER_YEAR;
+  };
+
   return (
-    <section id="resume" className="py-16 bg-card">
+    <section id="resume" className="py-12 bg-card">
       <div className="max-w-5xl mx-auto section-padding">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -79,93 +138,131 @@ const Resume = () => {
           </p>
         </motion.div>
 
-        <div className="relative">
+        {/* Desktop duration timeline */}
+        <div className="hidden md:block relative mx-auto" style={{ height: totalHeight + 24 }}>
           {/* Central vertical line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2 hidden md:block" />
-          <div className="absolute left-5 top-0 bottom-0 w-px bg-border md:hidden" />
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2" />
 
-          <div>
-            {years.map((year, yi) => {
-              const entriesForYear = timelineEntries.filter((e) => e.year === year);
-              return (
-                <div key={year}>
-                  {/* Year marker */}
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.3, delay: yi * 0.05 }}
-                    className="relative flex items-center justify-center mb-3 mt-1"
-                  >
-                    <div className="hidden md:flex items-center justify-center relative z-10">
-                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-sm">
-                        <span className="font-display text-xs text-primary-foreground font-semibold">
-                          {year}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="md:hidden flex items-center relative z-10 w-full">
-                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center shadow-sm ml-[0.25rem] -translate-x-1/2">
-                        <span className="font-display text-xs text-primary-foreground font-semibold">
-                          {year}
-                        </span>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {entriesForYear.map((entry, i) => (
-                    <motion.div
-                      key={entry.role + entry.org}
-                      initial={{ opacity: 0, y: 10 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.3, delay: 0.05 + i * 0.05 }}
-                      className={`relative mb-2.5 md:flex md:items-start ${
-                        entry.side === "left"
-                          ? "md:justify-start"
-                          : "md:justify-end"
-                      }`}
-                    >
-                      {/* Desktop node */}
-                      <div className="hidden md:block absolute left-1/2 top-3 -translate-x-1/2 z-10">
-                        <div className="w-2.5 h-2.5 rounded-full bg-primary border-2 border-card" />
-                      </div>
-                      {/* Mobile node */}
-                      <div className="md:hidden absolute left-5 top-3 -translate-x-1/2 z-10">
-                        <div className="w-2.5 h-2.5 rounded-full bg-primary border-2 border-card" />
-                      </div>
-
-                      {/* Connector */}
-                      <div
-                        className={`hidden md:block absolute top-[17px] h-px bg-border ${
-                          entry.side === "left"
-                            ? "left-[calc(50%-28px)] w-7"
-                            : "left-[calc(50%+5px)] w-7"
-                        }`}
-                      />
-
-                      {/* Card */}
-                      <div
-                        className={`ml-10 md:ml-0 md:w-auto md:max-w-[calc(50%-44px)] inline-flex flex-col rounded border border-border/60 bg-background px-3 py-2 shadow-sm ${
-                          entry.side === "left" ? "md:mr-auto md:text-right md:items-end" : "md:ml-auto md:text-left md:items-start"
-                        }`}
-                      >
-                        <p className="text-[10px] font-body text-primary/80 tracking-wide uppercase leading-none mb-0.5">
-                          {entry.period}
-                        </p>
-                        <h4 className="font-display text-[13px] text-foreground leading-tight">
-                          {entry.role}
-                        </h4>
-                        <p className="text-[11px] font-body text-muted-foreground leading-tight">
-                          {entry.org}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ))}
+          {/* Year tick marks */}
+          {yearTicks.map((year) => {
+            const top = toTop(year);
+            return (
+              <div
+                key={year}
+                className="absolute left-1/2 -translate-x-1/2 flex items-center z-20"
+                style={{ top }}
+              >
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center shadow-sm">
+                  <span className="font-display text-[10px] text-primary-foreground font-semibold">
+                    {year}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
+
+          {/* Entry cards */}
+          {timelineEntries.map((entry, i) => {
+            const startF = toFractional(entry.startYear, entry.startMonth);
+            const endF =
+              entry.endYear && entry.endMonth
+                ? toFractional(entry.endYear, entry.endMonth)
+                : toFractional(NOW_YEAR, NOW_MONTH);
+            const durationYears = endF - startF;
+            const cardHeight = Math.max(MIN_CARD_HEIGHT, durationYears * PIXELS_PER_YEAR);
+            const cardTop = toTop(endF); // top of card = end date (newest on top)
+
+            const isLeft = entry.side === "left";
+            // Card offset from center: gap for connector
+            const connectorLength = 20;
+            const cardLeft = isLeft
+              ? `calc(50% - ${CARD_WIDTH + connectorLength + 4}px)`
+              : `calc(50% + ${connectorLength + 4}px)`;
+
+            // Connector vertical center of card
+            const connectorTop = cardTop + cardHeight / 2;
+
+            return (
+              <motion.div
+                key={entry.role + entry.org}
+                initial={{ opacity: 0, x: isLeft ? -12 : 12 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.35, delay: i * 0.06 }}
+              >
+                {/* Connector line */}
+                <div
+                  className="absolute h-px bg-border"
+                  style={{
+                    top: connectorTop,
+                    left: isLeft ? `calc(50% - ${connectorLength + 4}px)` : "calc(50% + 4px)",
+                    width: connectorLength,
+                  }}
+                />
+                {/* Node dot */}
+                <div
+                  className="absolute w-2 h-2 rounded-full bg-primary border-2 border-card z-10"
+                  style={{
+                    top: connectorTop - 4,
+                    left: "calc(50% - 4px)",
+                  }}
+                />
+                {/* Card */}
+                <div
+                  className={`absolute border border-border/60 rounded bg-background shadow-sm flex flex-col justify-center ${
+                    isLeft ? "text-right" : "text-left"
+                  }`}
+                  style={{
+                    top: cardTop,
+                    left: cardLeft,
+                    width: CARD_WIDTH,
+                    minHeight: cardHeight,
+                    padding: "8px 12px",
+                  }}
+                >
+                  <p className="text-[10px] font-body text-primary/80 tracking-wide uppercase leading-none mb-0.5">
+                    {entry.period}
+                  </p>
+                  <h4 className="font-display text-[13px] text-foreground leading-tight">
+                    {entry.role}
+                  </h4>
+                  <p className="text-[11px] font-body text-muted-foreground leading-tight">
+                    {entry.org}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Mobile: simple stacked list */}
+        <div className="md:hidden relative">
+          <div className="absolute left-5 top-0 bottom-0 w-px bg-border" />
+          {timelineEntries.map((entry, i) => (
+            <motion.div
+              key={entry.role + entry.org}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: i * 0.05 }}
+              className="relative mb-3 flex items-start"
+            >
+              <div className="absolute left-5 top-3 -translate-x-1/2 z-10">
+                <div className="w-2 h-2 rounded-full bg-primary border-2 border-card" />
+              </div>
+              <div className="ml-10 border border-border/60 rounded bg-background shadow-sm px-3 py-2">
+                <p className="text-[10px] font-body text-primary/80 tracking-wide uppercase leading-none mb-0.5">
+                  {entry.period}
+                </p>
+                <h4 className="font-display text-[13px] text-foreground leading-tight">
+                  {entry.role}
+                </h4>
+                <p className="text-[11px] font-body text-muted-foreground leading-tight">
+                  {entry.org}
+                </p>
+              </div>
+            </motion.div>
+          ))}
         </div>
 
         <motion.div
