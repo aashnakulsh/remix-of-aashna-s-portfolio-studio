@@ -146,17 +146,17 @@ const Resume = () => {
 
                       {/* Card */}
                       <div
-                        className={`ml-10 md:ml-0 md:w-[calc(50%-36px)] rounded-md bg-background px-4 py-2.5 shadow-card ${
-                          entry.side === "left" ? "md:mr-auto md:text-right" : "md:ml-auto md:text-left"
+                        className={`ml-10 md:ml-0 md:w-auto md:max-w-[calc(50%-44px)] inline-flex flex-col rounded border border-border/60 bg-background px-3 py-2 shadow-sm ${
+                          entry.side === "left" ? "md:mr-auto md:text-right md:items-end" : "md:ml-auto md:text-left md:items-start"
                         }`}
                       >
-                        <p className="text-[10px] font-body text-primary tracking-wide uppercase">
+                        <p className="text-[10px] font-body text-primary/80 tracking-wide uppercase leading-none mb-0.5">
                           {entry.period}
                         </p>
-                        <h4 className="font-display text-sm text-foreground leading-snug">
+                        <h4 className="font-display text-[13px] text-foreground leading-tight">
                           {entry.role}
                         </h4>
-                        <p className="text-xs font-body text-muted-foreground">
+                        <p className="text-[11px] font-body text-muted-foreground leading-tight">
                           {entry.org}
                         </p>
                       </div>
