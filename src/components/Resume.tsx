@@ -120,7 +120,7 @@ const Resume = () => {
                       whileInView={{ opacity: 1, y: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.3, delay: 0.05 + i * 0.05 }}
-                      className={`relative mb-4 md:flex md:items-start ${
+                      className={`relative mb-2.5 md:flex md:items-start ${
                         entry.side === "left"
                           ? "md:justify-start"
                           : "md:justify-end"
